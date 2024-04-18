@@ -1,6 +1,6 @@
 ---
 author: haimtran
-title: develop an chatbot app and deploy on amazon ecs
+title: developing on amazon ecs
 date: 20/08/2023
 ---
 
