@@ -22,7 +22,6 @@ WORKDIR /
 
 COPY --from=build-stage /entest /entest
 COPY *.html ./
-COPY static ./static
 
 EXPOSE 3000
 
