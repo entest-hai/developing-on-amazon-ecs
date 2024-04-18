@@ -6,7 +6,7 @@ date: 20/08/2023
 
 ## Introduction
 
-[GitHub](https://github.com/entest-hai/ecs-chatbot-app/tree/master) this project shows how to build a chatbot and deploy it on amazon ecs. [video demo](https://d2cvlmmg8c0xrp.cloudfront.net/mp4/chatbot-app-demo-1.mp4)
+[GitHub](https://github.com/cdk-entest/developing-on-amazon-ecs) this project shows how to build a chatbot and deploy it on amazon ecs.
 
 [![screencast thumbnail](./assets/ecs-blue-green-deployment.png)](https://d2cvlmmg8c0xrp.cloudfront.net/mp4/ecs-chatbot-app-part-2.mp4)
 
