@@ -826,7 +826,7 @@ After created a repository named go-blue-green-app with project structure as bel
 |--appspec.yaml
 ```
 
-Content of taskdef.json
+Let's update content of the **taskdef.json**
 
 ```json
 {
