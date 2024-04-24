@@ -801,15 +801,84 @@ new CodePipelineStack(app, "CodePipelineStack", {
 Script to deploy infrastructure using CDK
 
 ```py
-cdk bootstrap aws://<ACCOUNT_ID>/us-west-2
+cdk bootstrap aws://<ACCOUNT_ID>/<REGION>
 cdk --app 'npx ts-node --prefer-ts-exts bin/ecs-blue-green-app.ts' synth
 cdk --app 'npx ts-node --prefer-ts-exts bin/ecs-blue-green-app.ts' deploy EcrStack
 cdk --app 'npx ts-node --prefer-ts-exts bin/ecs-blue-green-app.ts' deploy NetworkStack
 cdk --app 'npx ts-node --prefer-ts-exts bin/ecs-blue-green-app.ts' deploy AlbStack
 cdk --app 'npx ts-node --prefer-ts-exts bin/ecs-blue-green-app.ts' deploy EcsClusterStack
 cdk --app 'npx ts-node --prefer-ts-exts bin/ecs-blue-green-app.ts' deploy DeploymentGroupStack
+cdk --app 'npx ts-node --prefer-ts-exts bin/ecs-blue-green-app.ts' deploy EcsServiceStack
 cdk --app 'npx ts-node --prefer-ts-exts bin/ecs-blue-green-app.ts' deploy CodePipelineStack
+```
 
+## CI/CD Blue/Green
+
+After created a repository named go-blue-green-app with project structure as below
+
+```py
+|--Dockerfile
+|--go.mod
+|--go.sum
+|--main.go
+|--index.html
+|--taskdef.json
+|--appspec.yaml
+```
+
+Content of taskdef.json
+
+```json
+{
+  "containerDefinitions": [
+    {
+      "name": "go-blue-green-app",
+      "image": "<IMAGE1_NAME>",
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "ENV",
+          "value": "DEPLOY"
+        }
+      ]
+    }
+  ],
+  "family": "latest",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<TASK_ROLE_NAME>",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<EXECUTION_ROLE_NAME>",
+  "networkMode": "awsvpc",
+  "placementConstraints": [],
+  "compatibilities": ["EC2", "FARGATE"],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "2048",
+  "memory": "4096",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  }
+}
+```
+
+and appspec.yaml
+
+```yaml
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: <TASK_DEFINITION>
+        LoadBalancerInfo:
+          ContainerName: "go-blue-green-app"
+          ContainerPort: 3000
+        PlatformVersion: "LATEST"
 ```
 
 ## Application

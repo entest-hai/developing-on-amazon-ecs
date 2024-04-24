@@ -20,8 +20,8 @@
     }
   ],
   "family": "latest",
-  "taskRoleArn": "arn:aws:iam::$ACCOUNT_ID:role/TaskRole",
-  "executionRoleArn": "arn:aws:iam::$ACCOUNT_ID:role/ExecutionRole",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<TASK_ROLE_NAME>",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<EXECUTION_ROLE_NAME>",
   "networkMode": "awsvpc",
   "placementConstraints": [],
   "compatibilities": [
