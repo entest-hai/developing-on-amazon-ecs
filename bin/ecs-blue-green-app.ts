@@ -28,7 +28,7 @@ const ecr = new EcrStack(app, "EcrStack", {
 });
 
 // create vpc
-const network = new NetworkStack(app, "NetworkStackBlue", {
+const network = new NetworkStack(app, "NetworkStack", {
   cidr: CIDR,
   env: {
     region: REGION,
@@ -46,7 +46,7 @@ const alb = new AlbStack(app, "AlbStackBlue", {
 });
 
 // create ecs cluster
-const cluster = new EcsClusterStack(app, "EcsClusterStackBlue", {
+const cluster = new EcsClusterStack(app, "EcsClusterStack", {
   vpc: network.vpc,
   env: {
     region: REGION,
@@ -55,7 +55,7 @@ const cluster = new EcsClusterStack(app, "EcsClusterStackBlue", {
 });
 
 // create ecs service
-const service = new EcsServiceStack(app, "EcsServiceStackBlue", {
+const service = new EcsServiceStack(app, "EcsServiceStack", {
   cluster: cluster.cluster,
   ecrRepoName: ECR_REPO_NAME,
   alb: alb.alb,
