@@ -6,9 +6,15 @@ date: 20/08/2023
 
 ## Introduction
 
-[GitHub](https://github.com/cdk-entest/developing-on-amazon-ecs) this project shows how to build a chatbot and deploy it on amazon ecs.
+[GitHub](https://github.com/cdk-entest/developing-on-amazon-ecs) this project shows how to build applications on Amazon ECS with Blue/Green deployment.
 
-[![screencast thumbnail](./assets/ecs-blue-green-deployment.png)](https://d2cvlmmg8c0xrp.cloudfront.net/mp4/ecs-chatbot-app-part-2.mp4)
+Codepipeline
+
+![ecs-codepipeline](./assets/ecs-codepipeline.png)
+
+Blue/Green deployment
+
+![ecs-blue-green-deployment](./assets/ecs-blue-green-deployment.png)
 
 > [!WARNING]
 >
