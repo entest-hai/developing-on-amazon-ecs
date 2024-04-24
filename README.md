@@ -941,6 +941,9 @@ os.system(
 
 Here is task definition for busybox which support /bin/sh
 
+<details>
+<summary>taskdef.json</summary>
+
 ```json
 {
   "taskDefinitionArn": "arn:aws:ecs:<REGION>:<ACCOUNT_ID>:task-definition/busybox:2",
@@ -995,6 +998,8 @@ Here is task definition for busybox which support /bin/sh
   "tags": []
 }
 ```
+
+</details>
 
 Let's update IAM policy for the task role so we can access via SSM (ECS Exec)
 
