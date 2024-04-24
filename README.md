@@ -932,6 +932,142 @@ os.system(
 # os.system(f"sudo docker run -d -p 3001:3000 {APP_NAME}:latest")
 ```
 
+## ECS Exec
+
+- Launch task which support /bin/sh
+- Run task from CLI and enable exec command
+- Not supported from the console
+- Update task role
+
+Here is task definition for busybox which support /bin/sh
+
+```json
+{
+  "taskDefinitionArn": "arn:aws:ecs:<REGION>:<ACCOUNT_ID>:task-definition/busybox:2",
+  "containerDefinitions": [
+    {
+      "name": "busybox",
+      "image": "public.ecr.aws/docker/library/busybox:uclibc",
+      "cpu": 0,
+      "portMappings": [],
+      "essential": true,
+      "entryPoint": ["sh", "-c"],
+      "command": [
+        "/bin/sh -c \"while true; do /bin/date > /var/www/my-vol/date; sleep 1; done\""
+      ],
+      "environment": [],
+      "environmentFiles": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": [],
+      "systemControls": []
+    }
+  ],
+  "family": "busybox",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/EcsServiceStack-TaskDefinitionForWebTaskRole9A993B6-8N9ZDRJr2oa7",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/EcsServiceStack-RoleForEcsTaskToPullEcrChatbotImage-gV9XivFSTObj",
+  "networkMode": "awsvpc",
+  "revision": 2,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": ["EC2", "FARGATE"],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "3072",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "registeredAt": "2024-04-24T05:25:31.112Z",
+  "registeredBy": "arn:aws:sts::<ACCOUNT_ID>:assumed-role/WSParticipantRole/Participant",
+  "tags": []
+}
+```
+
+Let's update IAM policy for the task role so we can access via SSM (ECS Exec)
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssmmessages:CreateControlChannel",
+        "ssmmessages:CreateDataChannel",
+        "ssmmessages:OpenControlChannel",
+        "ssmmessages:OpenDataChannel"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+Exec into the container via CLI or AWS Toolkit Explorer (VSCode).
+
+```py
+aws ecs describe-tasks \
+    --cluster ecs-exec-demo-cluster \
+    --region $AWS_REGION \
+    --tasks ef6260ed8aab49cf926667ab0c52c313
+```
+
+```py
+aws ecs execute-command  \
+    --region us-west-2\
+    --cluster  EcsClusterStack-EcsClusterBlueGreen1FCAD080-GEfiXDOireob\
+    --task a307d3eaca3e470db6f65807a32354d5\
+    --container demo\
+    --command "/bin/sh" \
+    --interactive
+```
+
+```py
+aws ecs execute-command\
+    --region us-west-2\
+    --cluster  EcsClusterStack-EcsClusterBlueGreen1FCAD080-GEfiXDOireob\
+    --task 0b48038d1d8f4d6589dee73bda8fd9d6\
+    --container busybox\
+    --command "/bin/sh" \
+    --interactive
+```
+
+```py
+aws ecs run-task\
+  --region us-west-2\
+  --cluster EcsClusterStack-EcsClusterBlueGreen1FCAD080-GEfiXDOireob\
+  --count 1\
+  --enable-execute-command\
+  --launch-type FARGATE\
+  --network-configuration "awsvpcConfiguration={subnets=[subnet-09a914fbdf1120262],securityGroups=[	sg-04f2cbafa41127bb1],assignPublicIp=ENABLED}" \
+  --task-definition "busybox:2"
+```
+
+then exec into the task
+
+```py
+aws ecs execute-command\
+    --region us-west-2\
+    --cluster  EcsClusterStack-EcsClusterBlueGreen1FCAD080-GEfiXDOireob\
+    --task 0b48038d1d8f4d6589dee73bda8fd9d6\
+    --container busybox\
+    --command "/bin/sh" \
+    --interactive
+```
+
 ## Referece
 
 - [aws docs ecs standard](https://docs.aws.amazon.com/codepipeline/latest/userguide/ecs-cd-pipeline.html)
