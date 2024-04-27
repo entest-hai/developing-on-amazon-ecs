@@ -1,11 +1,12 @@
-#!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
 import { EcrStack } from "../lib/ecr-stack";
 import { AlbStack } from "../lib/alb-stack";
 import { EcsClusterStack } from "../lib/ecs-cluster-stack";
-import { EcsDeploymentGroup, EcsServiceStack } from "../lib/ecs-service-stack";
+import { EcsChatServiceStack } from "../lib/ecs-chat-service";
+import { EcsDeploymentGroup } from "../lib/ecs-deployment-group";
 import { CodePipelineStack } from "../lib/codepipeline-stack";
 import { NetworkStack } from "../lib/network-stack";
+import { EcsBookServiceStack } from "../lib/ecs-book-service";
 
 const app = new cdk.App();
 
@@ -55,11 +56,23 @@ const cluster = new EcsClusterStack(app, "EcsClusterStack", {
 });
 
 // create ecs service
-const service = new EcsServiceStack(app, "EcsServiceStack", {
+const chat = new EcsChatServiceStack(app, "EcsServiceStack", {
   cluster: cluster.cluster,
   ecrRepoName: ECR_REPO_NAME,
   alb: alb.alb,
-  blueTargetGroup: alb.blueTargetGroup,
+  listener: alb.prodListener,
+  env: {
+    region: REGION,
+    account: ACCOUNT,
+  },
+});
+
+// create ecs book service
+const book = new EcsBookServiceStack(app, "EcsBookService", {
+  cluster: cluster.cluster,
+  ecrRepoName: ECR_REPO_NAME,
+  alb: alb.alb,
+  listener: alb.prodListener,
   env: {
     region: REGION,
     account: ACCOUNT,
@@ -68,7 +81,7 @@ const service = new EcsServiceStack(app, "EcsServiceStack", {
 
 // deployment group
 const deploymentGroup = new EcsDeploymentGroup(app, "DeploymentGroupStack", {
-  service: service.service,
+  service: chat.service,
   blueTargetGroup: alb.blueTargetGroup,
   greenTargetGroup: alb.greenTargetGroup,
   listener: alb.prodListener,
@@ -84,7 +97,7 @@ new CodePipelineStack(app, "CodePipelineStack", {
   repoBranch: REPO_BRANCH,
   ecrRepoName: ECR_REPO_NAME,
   appDir: APP_DIR,
-  service: service.service,
+  service: chat.service,
   deploymentGroup: deploymentGroup.deploymentGroup,
   env: {
     region: REGION,
