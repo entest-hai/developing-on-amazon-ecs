@@ -1,12 +1,7 @@
-import {
-  aws_ec2,
-  aws_elasticloadbalancingv2,
-  Duration,
-  Stack,
-  StackProps,
-} from "aws-cdk-lib";
-
+import { Duration, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import * as aws_ec2 from "aws-cdk-lib/aws-ec2";
+import * as aws_elasticloadbalancingv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 
 interface AlbProps extends StackProps {
   vpc: aws_ec2.Vpc;

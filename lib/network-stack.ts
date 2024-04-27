@@ -1,5 +1,6 @@
-import { Stack, StackProps, aws_ec2 } from "aws-cdk-lib";
+import { Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import * as aws_ec2 from "aws-cdk-lib/aws-ec2";
 
 interface VpcProps extends StackProps {
   cidr: string;

@@ -1,15 +1,10 @@
-import {
-  aws_codedeploy,
-  aws_ec2,
-  aws_ecr,
-  aws_ecs,
-  aws_elasticloadbalancingv2,
-  aws_iam,
-  Duration,
-  Stack,
-  StackProps,
-} from "aws-cdk-lib";
-
+import { Duration, Stack, StackProps } from "aws-cdk-lib";
+import * as aws_codedeploy from "aws-cdk-lib/aws-codedeploy";
+import * as aws_ec2 from "aws-cdk-lib/aws-ec2";
+import * as aws_ecr from "aws-cdk-lib/aws-ecr";
+import * as aws_ecs from "aws-cdk-lib/aws-ecs";
+import * as aws_elasticloadbalancingv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import * as aws_iam from "aws-cdk-lib/aws-iam";
 import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
 import { Effect } from "aws-cdk-lib/aws-iam";
 import { Construct } from "constructs";

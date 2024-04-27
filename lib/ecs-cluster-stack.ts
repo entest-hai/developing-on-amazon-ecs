@@ -1,11 +1,6 @@
-import {
-  aws_ec2,
-  aws_ecs,
-  Stack,
-  StackProps,
-  IAspect,
-  Aspects,
-} from "aws-cdk-lib";
+import { Stack, StackProps, IAspect, Aspects } from "aws-cdk-lib";
+import * as aws_ec2 from "aws-cdk-lib/aws-ec2";
+import * as aws_ecs from "aws-cdk-lib/aws-ecs";
 import { Construct, IConstruct } from "constructs";
 
 interface EcsClusterProps extends StackProps {

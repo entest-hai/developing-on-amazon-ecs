@@ -1,16 +1,12 @@
-import {
-  aws_codedeploy,
-  aws_ecr,
-  aws_ecs,
-  aws_iam,
-  aws_codebuild,
-  aws_codecommit,
-  aws_codepipeline,
-  aws_codepipeline_actions,
-  Stack,
-  StackProps,
-} from "aws-cdk-lib";
-
+import { Stack, StackProps } from "aws-cdk-lib";
+import * as aws_codedeploy from "aws-cdk-lib/aws-codedeploy";
+import * as aws_ecr from "aws-cdk-lib/aws-ecr";
+import * as aws_ecs from "aws-cdk-lib/aws-ecs";
+import * as aws_iam from "aws-cdk-lib/aws-iam";
+import * as aws_codebuild from "aws-cdk-lib/aws-codebuild";
+import * as aws_codecommit from "aws-cdk-lib/aws-codecommit";
+import * as aws_codepipeline from "aws-cdk-lib/aws-codepipeline";
+import * as aws_codepipeline_actions from "aws-cdk-lib/aws-codepipeline-actions";
 import * as path from "path";
 import { Construct } from "constructs";
 
