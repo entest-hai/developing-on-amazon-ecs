@@ -1,33 +1,37 @@
+// https://ilya.app/blog/servemux-and-path-traversal
+
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-	"time"
+	"os"
 )
-
 
 func main() {
 
 	mux := http.NewServeMux()
 
-	// home page
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "index.html")
+
+		// read file
+		content, error := os.ReadFile("index.html")
+
+		if error != nil {
+			fmt.Println(error)
+		}
+
+		w.Write(content)
 	})
 
 	// create web server
 	server := &http.Server{
-		Addr:           ":3000",
-		Handler:        mux,
-		ReadTimeout:    30 * time.Second,
-		WriteTimeout:   30 * time.Second,
-		MaxHeaderBytes: 1 << 20,
+		Addr:    ":3000",
+		Handler: mux,
 	}
 
 	// enable logging
 	log.Fatal(server.ListenAndServe())
 
 }
-
-
